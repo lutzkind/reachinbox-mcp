@@ -1,0 +1,11 @@
+{
+  "name": "reachinbox-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for ReachInbox API",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": { "start": "node index.js" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  }
+}
