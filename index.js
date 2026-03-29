@@ -171,6 +171,40 @@ const TOOLS = [
     },
   },
 
+  // ── Sequence tools ─────────────────────────────────────────────────────────
+  {
+    name: 'reachinbox_campaign_sequences_get',
+    description: 'Get the sequence builder payload for a campaign',
+    inputSchema: {
+      type: 'object',
+      required: ['campaignId'],
+      properties: {
+        campaignId: { type: 'number', description: 'Campaign ID' },
+      },
+    },
+  },
+  {
+    name: 'reachinbox_campaign_sequences_save',
+    description: 'Save sequence builder steps for a campaign',
+    inputSchema: {
+      type: 'object',
+      required: ['campaignId', 'sequences'],
+      properties: {
+        campaignId: { type: 'number', description: 'Campaign ID' },
+        sequences: {
+          type: 'array',
+          description: 'Full sequence payload as returned by the campaign sequences endpoint',
+          items: { type: 'object' },
+        },
+        coreVariables: {
+          type: 'array',
+          description: 'Optional core variables payload',
+          items: { type: 'object' },
+        },
+      },
+    },
+  },
+
   // ── Lead tools ──────────────────────────────────────────────────────────────
   {
     name: 'reachinbox_leads_add',
@@ -442,6 +476,17 @@ async function handleTool(name, args) {
     case 'reachinbox_campaign_details': {
       const qs = buildQueryString({ campaignId: a.campaignId });
       return await proxyRequest('GET', `/api/v1/campaign/details${qs}`, {});
+    }
+
+    case 'reachinbox_campaign_sequences_get': {
+      const qs = buildQueryString({ campaignId: a.campaignId });
+      return await proxyRequest('GET', `/api/v1/campaign/sequences${qs}`, {});
+    }
+
+    case 'reachinbox_campaign_sequences_save': {
+      const body = { campaignId: a.campaignId, sequences: a.sequences };
+      if (a.coreVariables !== undefined) body.coreVariables = a.coreVariables;
+      return await proxyRequest('POST', '/api/v1/sequences/add', body);
     }
 
     case 'reachinbox_campaign_total_analytics': {
