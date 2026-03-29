@@ -2,7 +2,7 @@
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that gives AI tools (Claude Code, Gemini CLI, Codex CLI, etc.) full access to the [ReachInbox](https://app.reachinbox.ai) cold email platform via a self-hosted proxy.
 
-## Tools (22 total)
+## Tools (27 total)
 
 | Category | Tool | Description |
 |---|---|---|
@@ -12,7 +12,12 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that gi
 | | `reachinbox_campaign_pause` | Pause a campaign |
 | | `reachinbox_campaign_update` | Update campaign settings |
 | | `reachinbox_campaign_analytics` | Get campaign analytics |
+| | `reachinbox_campaign_details` | Get campaign details |
 | | `reachinbox_campaign_total_analytics` | Get aggregated analytics |
+| **Subsequences** | `reachinbox_subsequence_list` | List subsequences for a campaign |
+| | `reachinbox_subsequence_details` | Get subsequence details |
+| | `reachinbox_subsequence_create` | Create a subsequence |
+| | `reachinbox_subsequence_update` | Update a subsequence |
 | **Leads** | `reachinbox_leads_add` | Add leads to a campaign |
 | | `reachinbox_leads_update` | Update a lead |
 | | `reachinbox_leads_delete` | Delete leads from a campaign |
@@ -34,6 +39,7 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that gi
 ## Requirements
 
 - A running instance of [reachinbox-proxy](https://github.com/lutzkind/reachinbox-proxy) — the proxy handles authentication against the ReachInbox platform using your login credentials.
+- The current live API exposes campaign details and subsequence list/details/create/update routes; those are now surfaced through the MCP so campaign composition can stay inside MCP instead of dropping to raw proxy calls.
 
 ## Installation
 

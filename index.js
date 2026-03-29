@@ -97,6 +97,17 @@ const TOOLS = [
     },
   },
   {
+    name: 'reachinbox_campaign_details',
+    description: 'Get a campaign with its subsequences and configuration',
+    inputSchema: {
+      type: 'object',
+      required: ['campaignId'],
+      properties: {
+        campaignId: { type: 'number', description: 'Campaign ID' },
+      },
+    },
+  },
+  {
     name: 'reachinbox_campaign_total_analytics',
     description: 'Get total analytics across all campaigns',
     inputSchema: {
@@ -104,6 +115,58 @@ const TOOLS = [
       properties: {
         startDate: { type: 'string', description: 'Start date (YYYY-MM-DD)' },
         endDate:   { type: 'string', description: 'End date (YYYY-MM-DD)' },
+      },
+    },
+  },
+
+  // ── Subsequence tools ──────────────────────────────────────────────────────
+  {
+    name: 'reachinbox_subsequence_list',
+    description: 'List subsequences for a campaign',
+    inputSchema: {
+      type: 'object',
+      required: ['campaignId'],
+      properties: {
+        campaignId: { type: 'number', description: 'Campaign ID' },
+      },
+    },
+  },
+  {
+    name: 'reachinbox_subsequence_details',
+    description: 'Get subsequence details',
+    inputSchema: {
+      type: 'object',
+      required: ['subsequenceId'],
+      properties: {
+        subsequenceId: { type: 'number', description: 'Subsequence ID' },
+      },
+    },
+  },
+  {
+    name: 'reachinbox_subsequence_create',
+    description: 'Create a new subsequence in a campaign',
+    inputSchema: {
+      type: 'object',
+      required: ['campaignId', 'name'],
+      properties: {
+        campaignId: { type: 'number', description: 'Campaign ID' },
+        name: { type: 'string', description: 'Subsequence name' },
+        subject: { type: 'string', description: 'Email subject', default: '' },
+        body: { type: 'string', description: 'Email body', default: '' },
+      },
+    },
+  },
+  {
+    name: 'reachinbox_subsequence_update',
+    description: 'Update a subsequence',
+    inputSchema: {
+      type: 'object',
+      required: ['subsequenceId'],
+      properties: {
+        subsequenceId: { type: 'number', description: 'Subsequence ID' },
+        name: { type: 'string', description: 'New subsequence name' },
+        subject: { type: 'string', description: 'Email subject', default: '' },
+        body: { type: 'string', description: 'Email body', default: '' },
       },
     },
   },
@@ -376,11 +439,50 @@ async function handleTool(name, args) {
     case 'reachinbox_campaign_analytics':
       return await proxyRequest('POST', '/api/v1/campaign/analytics', { campaignId: a.campaignId });
 
+    case 'reachinbox_campaign_details': {
+      const qs = buildQueryString({ campaignId: a.campaignId });
+      return await proxyRequest('GET', `/api/v1/campaign/details${qs}`, {});
+    }
+
     case 'reachinbox_campaign_total_analytics': {
       const body = {};
       if (a.startDate !== undefined) body.startDate = a.startDate;
       if (a.endDate   !== undefined) body.endDate   = a.endDate;
       return await proxyRequest('POST', '/api/v1/campaign/total-analytics', body);
+    }
+
+    // ── Subsequences ───────────────────────────────────────────────────────────
+    case 'reachinbox_subsequence_list': {
+      const qs = buildQueryString({ campaignId: a.campaignId });
+      return await proxyRequest('GET', `/api/v1/subsequence/list${qs}`, {});
+    }
+
+    case 'reachinbox_subsequence_details': {
+      const qs = buildQueryString({ subsequenceId: a.subsequenceId });
+      return await proxyRequest('GET', `/api/v1/subsequence/details${qs}`, {});
+    }
+
+    case 'reachinbox_subsequence_create': {
+      const body = { campaignId: a.campaignId, name: a.name };
+      if (a.subject !== undefined) body.subject = a.subject;
+      if (a.body !== undefined) body.body = a.body;
+      if (a.leadStatusCondition !== undefined) body.leadStatusCondition = a.leadStatusCondition;
+      if (a.leadActivityCondition !== undefined) body.leadActivityCondition = a.leadActivityCondition;
+      if (a.leadReplyText !== undefined) body.leadReplyText = a.leadReplyText;
+      if (a.leadReplyContext !== undefined) body.leadReplyContext = a.leadReplyContext;
+      return await proxyRequest('POST', '/api/v1/subsequence/create', body);
+    }
+
+    case 'reachinbox_subsequence_update': {
+      const body = { subsequenceId: a.subsequenceId };
+      if (a.name !== undefined) body.name = a.name;
+      if (a.subject !== undefined) body.subject = a.subject;
+      if (a.body !== undefined) body.body = a.body;
+      if (a.leadStatusCondition !== undefined) body.leadStatusCondition = a.leadStatusCondition;
+      if (a.leadActivityCondition !== undefined) body.leadActivityCondition = a.leadActivityCondition;
+      if (a.leadReplyText !== undefined) body.leadReplyText = a.leadReplyText;
+      if (a.leadReplyContext !== undefined) body.leadReplyContext = a.leadReplyContext;
+      return await proxyRequest('POST', '/api/v1/subsequence/update', body);
     }
 
     // ── Leads ─────────────────────────────────────────────────────────────────
