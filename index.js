@@ -108,6 +108,52 @@ const TOOLS = [
     },
   },
   {
+    name: 'reachinbox_campaign_options',
+    description: 'Get campaign options and configuration details',
+    inputSchema: {
+      type: 'object',
+      required: ['campaignId'],
+      properties: {
+        campaignId: { type: 'number', description: 'Campaign ID' },
+      },
+    },
+  },
+  {
+    name: 'reachinbox_campaign_schedule',
+    description: 'Get campaign schedule details',
+    inputSchema: {
+      type: 'object',
+      required: ['campaignId'],
+      properties: {
+        campaignId: { type: 'number', description: 'Campaign ID' },
+      },
+    },
+  },
+  {
+    name: 'reachinbox_campaign_list_accounts',
+    description: 'List accounts attached to a campaign',
+    inputSchema: {
+      type: 'object',
+      required: ['campaignId'],
+      properties: {
+        campaignId: { type: 'number', description: 'Campaign ID' },
+        limit: { type: 'number', description: 'Maximum accounts to return', default: 5 },
+      },
+    },
+  },
+  {
+    name: 'reachinbox_campaign_list_accounts_errors',
+    description: 'List account errors for a campaign',
+    inputSchema: {
+      type: 'object',
+      required: ['campaignId'],
+      properties: {
+        campaignId: { type: 'number', description: 'Campaign ID' },
+        limit: { type: 'number', description: 'Maximum errors to return', default: 5 },
+      },
+    },
+  },
+  {
     name: 'reachinbox_campaign_total_analytics',
     description: 'Get total analytics across all campaigns',
     inputSchema: {
@@ -476,6 +522,26 @@ async function handleTool(name, args) {
     case 'reachinbox_campaign_details': {
       const qs = buildQueryString({ campaignId: a.campaignId });
       return await proxyRequest('GET', `/api/v1/campaign/details${qs}`, {});
+    }
+
+    case 'reachinbox_campaign_options': {
+      const qs = buildQueryString({ campaignId: a.campaignId });
+      return await proxyRequest('GET', `/api/v1/campaign/options${qs}`, {});
+    }
+
+    case 'reachinbox_campaign_schedule': {
+      const qs = buildQueryString({ campaignId: a.campaignId });
+      return await proxyRequest('GET', `/api/v1/campaign/schedule${qs}`, {});
+    }
+
+    case 'reachinbox_campaign_list_accounts': {
+      const qs = buildQueryString({ campaignId: a.campaignId, limit: a.limit ?? 5 });
+      return await proxyRequest('GET', `/api/v1/campaign/list-accounts${qs}`, {});
+    }
+
+    case 'reachinbox_campaign_list_accounts_errors': {
+      const qs = buildQueryString({ campaignId: a.campaignId, limit: a.limit ?? 5 });
+      return await proxyRequest('GET', `/api/v1/campaign/list-accounts-errors${qs}`, {});
     }
 
     case 'reachinbox_campaign_sequences_get': {

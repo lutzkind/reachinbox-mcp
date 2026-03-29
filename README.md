@@ -2,7 +2,7 @@
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that gives AI tools (Claude Code, Gemini CLI, Codex CLI, etc.) full access to the [ReachInbox](https://app.reachinbox.ai) cold email platform via a self-hosted proxy.
 
-## Tools (29 total)
+## Tools (33 total)
 
 | Category | Tool | Description |
 |---|---|---|
@@ -13,6 +13,10 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that gi
 | | `reachinbox_campaign_update` | Update campaign settings |
 | | `reachinbox_campaign_analytics` | Get campaign analytics |
 | | `reachinbox_campaign_details` | Get campaign details |
+| | `reachinbox_campaign_options` | Get campaign options |
+| | `reachinbox_campaign_schedule` | Get campaign schedule |
+| | `reachinbox_campaign_list_accounts` | List campaign accounts |
+| | `reachinbox_campaign_list_accounts_errors` | List campaign account errors |
 | | `reachinbox_campaign_total_analytics` | Get aggregated analytics |
 | **Sequences** | `reachinbox_campaign_sequences_get` | Get campaign sequence builder payload |
 | | `reachinbox_campaign_sequences_save` | Save campaign sequence builder payload |
@@ -41,7 +45,7 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that gi
 ## Requirements
 
 - A running instance of [reachinbox-proxy](https://github.com/lutzkind/reachinbox-proxy) — the proxy handles authentication against the ReachInbox platform using your login credentials.
-- The current live API exposes campaign details, sequence builder get/save, and subsequence list/details/create/update routes; those are now surfaced through the MCP so campaign composition can stay inside MCP instead of dropping to raw proxy calls.
+- The current live API exposes campaign details, options, schedule, account diagnostics, sequence builder get/save, and subsequence list/details/create/update routes; those are now surfaced through the MCP so campaign composition can stay inside MCP instead of dropping to raw proxy calls.
 
 ## Installation
 
