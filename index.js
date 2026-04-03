@@ -485,6 +485,46 @@ const TOOLS = [
       },
     },
   },
+
+  // ── Blocklist tools ─────────────────────────────────────────────────────────
+  {
+    name: 'reachinbox_blocklist_add',
+    description: 'Add emails, domains, keywords, or reply keywords to the blocklist',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        emails:          { type: 'array', items: { type: 'string' }, description: 'Email addresses to block' },
+        domains:         { type: 'array', items: { type: 'string' }, description: 'Domains to block' },
+        keywords:        { type: 'array', items: { type: 'string' }, description: 'Subject/body keywords to block' },
+        repliesKeywords: { type: 'array', items: { type: 'string' }, description: 'Reply keywords to block' },
+      },
+    },
+  },
+  {
+    name: 'reachinbox_blocklist_get',
+    description: 'Get blocklist entries. Optionally filter by table: emails, domains, keywords, repliesKeywords',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        table:  { type: 'string', description: 'emails | domains | keywords | repliesKeywords (omit for all)' },
+        limit:  { type: 'number', description: 'Max entries to return' },
+        offset: { type: 'number', description: 'Pagination offset' },
+        q:      { type: 'string', description: 'Search query' },
+      },
+    },
+  },
+  {
+    name: 'reachinbox_blocklist_delete',
+    description: 'Remove entries from the blocklist by value',
+    inputSchema: {
+      type: 'object',
+      required: ['table', 'ids'],
+      properties: {
+        table: { type: 'string', description: 'emails | domains | keywords | repliesKeywords' },
+        ids:   { type: 'array', items: { type: 'string' }, description: 'Values to remove' },
+      },
+    },
+  },
 ];
 
 async function handleTool(name, args) {
@@ -686,6 +726,28 @@ async function handleTool(name, args) {
         event:       a.event,
         callbackUrl: a.callbackUrl,
       });
+
+    // ── Blocklist ─────────────────────────────────────────────────────────────
+    case 'reachinbox_blocklist_add':
+      return await proxyRequest('POST', '/api/v1/blocklist/add', {
+        emails:          a.emails          || [],
+        domains:         a.domains         || [],
+        keywords:        a.keywords        || [],
+        repliesKeywords: a.repliesKeywords || [],
+      });
+
+    case 'reachinbox_blocklist_get': {
+      const path = a.table ? `/api/v1/blocklist/${a.table}` : '/api/v1/blocklist';
+      const qs = buildQueryString({
+        limit:  a.limit,
+        offset: a.offset,
+        q:      a.q,
+      });
+      return await proxyRequest('GET', `${path}${qs}`, {});
+    }
+
+    case 'reachinbox_blocklist_delete':
+      return await proxyRequest('DELETE', `/api/v1/blocklist/${a.table}`, { ids: a.ids });
 
     default:
       throw new Error(`Unknown tool: ${name}`);
