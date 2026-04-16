@@ -2,7 +2,7 @@
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that gives AI tools (Claude Code, Gemini CLI, Codex CLI, etc.) full access to the [ReachInbox](https://app.reachinbox.ai) cold email platform via a self-hosted proxy.
 
-## Tools (33 total)
+## Tools (52 total)
 
 | Category | Tool | Description |
 |---|---|---|
@@ -18,6 +18,16 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that gi
 | | `reachinbox_campaign_list_accounts` | List campaign accounts |
 | | `reachinbox_campaign_list_accounts_errors` | List campaign account errors |
 | | `reachinbox_campaign_total_analytics` | Get aggregated analytics |
+| | `reachinbox_campaign_delete` | Delete a campaign |
+| | `reachinbox_campaign_get_settings_bundle` | Get the full editable campaign settings bundle |
+| | `reachinbox_campaign_apply_settings_bundle` | Apply a campaign settings bundle |
+| | `reachinbox_campaign_copy_settings` | Copy settings from one campaign to another |
+| | `reachinbox_campaign_update_options` | Update the full campaign options payload |
+| | `reachinbox_campaign_save_schedule` | Replace the campaign schedule payload |
+| **Schedule Templates** | `reachinbox_schedule_template_list` | List schedule templates |
+| | `reachinbox_schedule_template_create` | Create a schedule template |
+| | `reachinbox_schedule_template_update` | Update a schedule template |
+| | `reachinbox_schedule_template_delete` | Delete a schedule template |
 | **Sequences** | `reachinbox_campaign_sequences_get` | Get campaign sequence builder payload |
 | | `reachinbox_campaign_sequences_save` | Save campaign sequence builder payload |
 | **Subsequences** | `reachinbox_subsequence_list` | List subsequences for a campaign |
@@ -30,6 +40,10 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that gi
 | **Lead Lists** | `reachinbox_lead_list_get_all` | Get all lead lists |
 | | `reachinbox_lead_list_create` | Create a lead list |
 | | `reachinbox_lead_list_add_leads` | Add leads to a list |
+| | `reachinbox_lead_list_get_leads` | Get leads from a list |
+| | `reachinbox_lead_list_update` | Rename or update a lead list |
+| | `reachinbox_lead_list_add_to_campaign` | Add all list leads to a campaign |
+| | `reachinbox_lead_list_delete` | Delete a lead list |
 | **Accounts** | `reachinbox_account_list` | List connected email accounts |
 | | `reachinbox_account_warmup_analytics` | Get warmup analytics |
 | **Inbox** | `reachinbox_onebox_list` | List inbox threads |
@@ -41,11 +55,14 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that gi
 | **Webhooks** | `reachinbox_webhook_list` | List webhook subscriptions |
 | | `reachinbox_webhook_subscribe` | Subscribe to events |
 | | `reachinbox_webhook_unsubscribe` | Remove a subscription |
+| **Blocklist** | `reachinbox_blocklist_add` | Add emails, domains, or keywords to the blocklist |
+| | `reachinbox_blocklist_get` | Get blocklist entries |
+| | `reachinbox_blocklist_delete` | Remove blocklist entries |
 
 ## Requirements
 
 - A running instance of [reachinbox-proxy](https://github.com/lutzkind/reachinbox-proxy) — the proxy handles authentication against the ReachInbox platform using your login credentials.
-- The current live API exposes campaign details, options, schedule, account diagnostics, sequence builder get/save, and subsequence list/details/create/update routes; those are now surfaced through the MCP so campaign composition can stay inside MCP instead of dropping to raw proxy calls.
+- The current MCP surface includes campaign admin operations, lead-list admin operations, schedule-template CRUD, campaign settings bundle get/apply/copy flows, sequence builder get/save, blocklist management, and inbox/webhook access so most operational tasks can stay inside MCP instead of dropping to raw proxy calls.
 
 ## Installation
 
