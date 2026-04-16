@@ -1027,8 +1027,8 @@ const TOOLS = [
     description: 'Unsubscribe from a webhook event',
     inputSchema: {
       type: 'object',
-      required: ['campaignId', 'event', 'callbackUrl'],
       properties: {
+        id:          { type: 'string', description: 'Webhook subscription ID from reachinbox_webhook_list' },
         campaignId:  { type: 'number', description: 'Campaign ID' },
         event:       { type: 'string', description: 'Event type to unsubscribe from' },
         callbackUrl: { type: 'string', description: 'Callback URL to remove' },
@@ -1340,6 +1340,9 @@ async function handleTool(name, args) {
       });
 
     case 'reachinbox_webhook_unsubscribe':
+      if (a.id) {
+        return await proxyRequest('DELETE', `/api/v1/webhook/delete/${encodeURIComponent(a.id)}`, {});
+      }
       return await proxyRequest('POST', '/api/v1/webhook/unsubscribe', {
         campaignId:  a.campaignId,
         event:       a.event,
